@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Welcome to <%= title %>!</p>
+    
+    <a href="/staff/another_page">The other page</a>
+
+    <h5>Add a staff member</h5>
+    <form class="" action="/staff/add" method="post">
+      <label for="staff_name">Enter the first name: </label>
+      <input type="text" name="staff_name"/>
+      <button type="submit" name="button">Submit</button>
+    </form>
+    <% for( var i = 0; i < staff_members.length; i++ ) { %>
+      <p>Staff Members: <%= staff_members[i].fName %> </p>
+      <form method="post" action="/staff/delete">
+        <!-- hidden input type means its not seen but it is still there -->
+        <!--  name="staff_id" has to match: var delete_id = req.body.staff_id; -->
+        <input type="hidden" value="<%= staff_members[i].staffID  %> " name="staff_id">
+        <button type="submit">Delete</button>
+      </form>
+      <form action="/staff/update" method="get">
+        <input type="hidden" value="<%= staff_members[i].staffID  %> " name="staff_id">
+        <button type="submit">Update</button>
+
+      </form>
+    <% } %>
+
+    
+  </body>
+</html>
