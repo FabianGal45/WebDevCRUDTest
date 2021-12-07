@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Welcome to <%= title %>!</p>
+    
+    <h5>Add a product to the list</h5>
+    <form class="" action="/products/add" method="post">
+      <label for="item_name">Enter the product name: </label>
+      <input type="text" name="item_name"/>
+      <button type="submit" name="button">Submit</button>
+    </form>
+    <% for( var i = 0; i < products.length; i++ ) { %>
+      <p>Products: <%= products[i].itemName %> </p>
+      <form method="post" action="/products/delete">
+        <!-- hidden input type means its not seen but it is still there -->
+        <!--  name="staff_id" has to match: var delete_id = req.body.staff_id; -->
+        <input type="hidden" value="<%= products[i].itemID  %> " name="prduct_id">
+        <button type="submit">Delete</button>
+      </form>
+      <form action="/products/update" method="get">
+        <input type="hidden" value="<%= products[i].itemID  %> " name="product_id">
+        <button type="submit">Update</button>
+
+      </form>
+    <% } %>
+
+    
+  </body>
+</html>

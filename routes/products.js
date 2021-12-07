@@ -4,20 +4,18 @@ var MySql = require('sync-mysql');
 
 //get = show data
 router.get('/', function(req, res, next) { 
-  //res.render('staff', { title: 'Staff Members' });
   var connection = new MySql({
     host: 'localhost',
     user: 'root',
     password: 'passwordformysql',
     database: 'pc_world'
   });
-  var staff_members = connection.query('SELECT * FROM staff;');
-  console.log(staff_members);
-  // console.log("TEST: "+staff_members[1].fName);
+  var products = connection.query('SELECT * FROM products;');
+  console.log(products);
   
-  res.render('staff', {
-    title: 'Staff Members',
-    staff_members: staff_members
+  res.render('products', {
+    title: 'Products',
+    products: products
   });
 });
 
@@ -29,12 +27,11 @@ router.get('/another_page', function(req, res, next){
 });
 
 router.get('/update', function(req, res, next){ //or it can be edit
-  var staff_id = req.query.staff_id;
-  //console.log(staff_id);//check the id of the staff name/member
+  var product_id = req.query.product_id;
 
   res.render("update", { //name of the ejs file
-    title: 'Update staff',
-    staff_id: staff_id
+    title: 'Update Products',
+    product_id: product_id
   });
 });
 
@@ -49,10 +46,10 @@ router.post('/add', function(req, res, next){
     database: 'pc_world'
   });
 
-  connection.query('INSERT INTO staff(fName) VALUES (?)', [req.body.staff_name]);
+  connection.query('INSERT INTO products(itemName) VALUES (?);', [req.body.item_name]);
 
-  console.log(req.body.staff_name);  
-  res.redirect("/staff");
+  console.log(req.body.item_name);  
+  res.redirect("/products");
 });
 
 router.post('/delete', function(req, res, next){
@@ -62,9 +59,10 @@ router.post('/delete', function(req, res, next){
     password: 'passwordformysql',
     database: 'pc_world'
   });
-  var delete_id = req.body.staff_id;//takes the staff_id from the html file
-  connection.query('DELETE FROM staff WHERE staffID=(?);', [delete_id]);//we need to have the variable in square brackets as there can be multiple questrion marks in the query
-  res.redirect("/staff"); //go back to the /staff page to start again.
+  
+  var delete_id = req.body.prduct_id;//takes the staff_id from the html file
+  connection.query('DELETE FROM products WHERE itemID=(?);', [delete_id]);//we need to have the variable in square brackets as there can be multiple questrion marks in the query
+  res.redirect("/products"); //go back to the /staff page to start again.
 });
 
 router.post('/update', function(req, res, next){
@@ -81,7 +79,7 @@ router.post('/update', function(req, res, next){
   
   //console.log('UPDATE staff SET fName = (?) WHERE staffID=(?);',[staff_id, staff_name])
   connection.query("UPDATE staff SET fName = (?) WHERE staffID=(?);", [staff_name, staff_id]);
-  res.redirect("/staff");
+  res.redirect("/products");
 });
 
 
