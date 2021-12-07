@@ -28,8 +28,9 @@ router.get('/another_page', function(req, res, next){
 
 router.get('/update', function(req, res, next){ //or it can be edit
   var product_id = req.query.product_id;
+  console.log("Here is the product id from the query: "+product_id);
 
-  res.render("update", { //name of the ejs file
+  res.render("update_products", { //name of the ejs file
     title: 'Update Products',
     product_id: product_id
   });
@@ -66,8 +67,8 @@ router.post('/delete', function(req, res, next){
 });
 
 router.post('/update', function(req, res, next){
-  var staff_id = req.body.staff_id;
-  var staff_name = req.body.staff_name;
+  var product_id = req.body.product_id;
+  var product_name = req.body.product_name;
   // console.log("TeSt: "+ staff_name);
   // console.log("TEsT: "+ staff_id);
   var connection = new MySql({
@@ -78,7 +79,7 @@ router.post('/update', function(req, res, next){
   });
   
   //console.log('UPDATE staff SET fName = (?) WHERE staffID=(?);',[staff_id, staff_name])
-  connection.query("UPDATE staff SET fName = (?) WHERE staffID=(?);", [staff_name, staff_id]);
+  connection.query("UPDATE products SET itemName = (?) WHERE itemID=(?);", [product_name, product_id]);
   res.redirect("/products");
 });
 
