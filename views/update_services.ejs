@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> </title>
+</head>
+<body>
+  <p>Update Product</p>
+  <% if(error) { %>
+    <p class="error">Error: <%= error %></p>
+  <% } %>
+  <form method="post" action="/services/update">
+    <input type="hidden" value="<%= serviceID %>" name="serviceID">
+
+    <label for="new_serviceID">ID: </label>
+    <input type="text" name="new_serviceID">
+
+    <label for="serviceName">Name: </label>
+    <input type="text" name="serviceName">
+
+    <label for="customerName">Customer Name: </label>
+    <input type="text" name="customerName">
+
+    <label for="productID">productID: </label>
+    <input type="number" name="productID">
+
+    <label for="serviceDescription">serviceDescription: </label>
+    <input type="text" name="serviceDescription">
+
+    <button type="submit">Submit</button>
+  </form>
+</body>
+</html>

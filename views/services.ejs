@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <h5>Add a Service to the list</h5>
+    <% if(error) { %>
+      <p class="error">Error: <%= error %></p>
+    <% } %>
+    <form class="" action="/services/add" method="post">
+      <!-- I need to find a way to check if the id already exists and to throw an error -->
+      <label for="serviceID" class="inputID">ID: </label>
+      <input type="number" name="serviceID"/>
+      <br>
+      <label for="serviceName">Name: </label>
+      <input type="text" name="serviceName" required/>
+      <br>
+      <label for="customerName">Customer name: </label>
+      <input type="text" name="customerName" required/>
+      <br>
+      <label for="productID">Related product: </label>
+      <input type="number" name="productID" required/>
+      <br>
+      <label for="serviceDescription">Description: </label>
+      <input type="text" name="serviceDescription" required/>
+      <br>
+      <button type="submit" name="button">Submit</button>
+    </form>
+    <br>
+    <% for( var i = 0; i < services.length; i++ ) { %>
+      <br>
+      <table>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Customer Name</th>
+          <th>Product related</th>
+          <th>Descripotion</th>
+        </tr>
+        <tr>
+          <td><%= services[i].serviceID %></td>
+          <td><%= services[i].serviceName %></td>
+          <td><%= services[i].customerName %></td>
+          <td><%= services[i].productID %></td>
+          <td><%= services[i].serviceDescription %></td>
+        </tr>
+      </table>
+      <form method="post" action="/services/delete">
+        <input type="hidden" value="<%= services[i].serviceID  %> " name="serviceID">
+        <button type="submit">Delete</button>
+      </form>
+      <form action="/services/update" method="get">
+        <input type="hidden" value="<%= services[i].serviceID  %> " name="serviceID">
+        <button type="submit">Update</button>
+
+      </form>
+    <% } %>
+
+    
+  </body>
+</html>
