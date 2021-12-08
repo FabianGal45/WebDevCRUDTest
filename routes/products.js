@@ -11,7 +11,7 @@ router.get('/', function(req, res, next) {
     database: 'pc_world'
   });
   var products = connection.query('SELECT * FROM products;');
-  console.log(products);
+  //console.log(products);
   
   res.render('products', {
     title: 'Products',
@@ -19,17 +19,15 @@ router.get('/', function(req, res, next) {
   });
 });
 
-router.get('/another_page', function(req, res, next){
-  res.render("another_page", {
-    title: 'Another Page'
-  })
+// router.get('/another_page', function(req, res, next){
+//   res.render("another_page", {
+//     title: 'Another Page'
+//   })
 
-});
+// });
 
 router.get('/update', function(req, res, next){ //or it can be edit
   var product_id = req.query.product_id;
-  console.log("Here is the product id from the query: "+product_id);
-
   res.render("update_products", { //name of the ejs file
     title: 'Update Products',
     product_id: product_id
@@ -40,6 +38,12 @@ router.get('/update', function(req, res, next){ //or it can be edit
 //post = take in data
 //res is what we want when comming out
 router.post('/add', function(req, res, next){ 
+  var itemID = req.body.item_id;
+  var itemName = req.body.item_name;
+  var itemCategory = req.body.item_category;
+  var itemStock = req.body.item_stock;
+  var itemDescription = req.body.item_description;
+  var itemPrice = req.body.item_price;
   var connection = new MySql({
     host: 'localhost',
     user: 'root',
@@ -47,7 +51,7 @@ router.post('/add', function(req, res, next){
     database: 'pc_world'
   });
 
-  connection.query('INSERT INTO products(itemName) VALUES (?);', [req.body.item_name]);
+  connection.query('INSERT INTO products(itemID, itemName, category, stock, itemDescription, price) VALUES ((?), (?), (?), (?), (?), (?));', [itemID, itemName, itemCategory, itemStock, itemDescription, itemPrice]);
 
   console.log(req.body.item_name);  
   res.redirect("/products");
