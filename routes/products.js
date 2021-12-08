@@ -11,8 +11,6 @@ router.get('/', function(req, res, next) {
     database: 'pc_world'
   });
   var products = connection.query('SELECT * FROM products;');
-  //console.log(products);
-  
   res.render('products', {
     title: 'Products',
     products: products
@@ -28,9 +26,11 @@ router.get('/', function(req, res, next) {
 
 router.get('/update', function(req, res, next){ //or it can be edit
   var product_id = req.query.product_id;
+  var error = req.query.error
   res.render("update_products", { //name of the ejs file
     title: 'Update Products',
-    product_id: product_id
+    product_id: product_id,
+    error: error
   });
 });
 
@@ -71,10 +71,13 @@ router.post('/delete', function(req, res, next){
 });
 
 router.post('/update', function(req, res, next){
-  var product_id = req.body.product_id;
-  var product_name = req.body.product_name;
-  // console.log("TeSt: "+ staff_name);
-  // console.log("TEsT: "+ staff_id);
+  var product_id = req.body.item_id;
+  var newProductID = req.body.new_item_id
+  var product_name = req.body.item_name;
+  var itemCategory = req.body.item_category;
+  var itemStock = req.body.item_stock;
+  var itemDescription = req.body.item_description;
+  var itemPrice = req.body.item_price;
   var connection = new MySql({
     host: 'localhost',
     user: 'root',
@@ -82,8 +85,70 @@ router.post('/update', function(req, res, next){
     database: 'pc_world'
   });
   
-  //console.log('UPDATE staff SET fName = (?) WHERE staffID=(?);',[staff_id, staff_name])
-  connection.query("UPDATE products SET itemName = (?) WHERE itemID=(?);", [product_name, product_id]);
+  var query_string = "UPDATE products set"
+  var params = []
+  if(newProductID) {
+    query_string += ' itemID = (?)'
+    params.push(newProductID)
+  }
+  if(product_name) {
+    if(newProductID) {
+      query_string +=", "
+    }
+    query_string += ' itemName = (?) '
+    params.push(product_name)
+  }
+  if(itemCategory) {
+    if(newProductID || product_name) {
+      query_string +=", "
+    }
+    query_string += ' category = (?) '
+    params.push(itemCategory)
+  }
+  if(itemStock) {
+    if(newProductID || product_name || itemCategory) {
+      query_string +=", "
+    }
+    query_string += ' stock = (?) '
+    params.push(itemStock)
+  }
+  if(itemDescription) {
+    if(newProductID || product_name || itemCategory || itemStock) {
+      query_string +=", "
+    }
+    query_string += ' itemDescription = (?) '
+    params.push(itemDescription)
+  }
+  if(itemPrice) {
+    if(newProductID || product_name || itemCategory || itemStock) {
+      query_string +=", "
+    }
+    query_string += ' price = (?) '
+    params.push(itemPrice)
+  }
+  query_string += " WHERE itemID = (?)"
+  
+
+  //if nothing has been inserted inthe fieleds it will throw an error
+  if(!newProductID && !product_name && !itemCategory && !itemStock && !itemDescription  && !itemPrice) {
+    res.redirect("/products/update?product_id=" + product_id + "&error=You must update some fields")
+  }
+  // var products = connection.query('SELECT * FROM products;');
+  
+  // for(var i=0; i < products.length; i++){
+  //   console.log(products[i].itemID + " " +product_id);
+  //   if(product_id == products[i].itemID){
+  //     console.log("THERE IS A MATCH!!! "+ products[i].itemID)
+  //     res.redirect("/products/update?product_id=" + product_id + "&error=You cannot use the same ID")
+  //   } 
+  // }
+  
+  params.push(product_id)
+  console.log("")
+
+  console.log(">>> Query "+ query_string);
+  console.log(">>> Params "+ params)
+  connection.query(query_string, params)
   res.redirect("/products");
 });
 
