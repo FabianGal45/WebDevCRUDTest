@@ -133,15 +133,15 @@ router.post('/update', function(req, res, next){
   if(!newProductID && !product_name && !itemCategory && !itemStock && !itemDescription  && !itemPrice) {
     res.redirect("/products/update?product_id=" + product_id + "&error=You must update some fields")
   }
-  // var products = connection.query('SELECT * FROM products;');
+  var products = connection.query('SELECT * FROM products;');
   
-  // for(var i=0; i < products.length; i++){
-  //   console.log(products[i].itemID + " " +product_id);
-  //   if(product_id == products[i].itemID){
-  //     console.log("THERE IS A MATCH!!! "+ products[i].itemID)
-  //     res.redirect("/products/update?product_id=" + product_id + "&error=You cannot use the same ID")
-  //   } 
-  // }
+  for(var i=0; i < products.length; i++){
+    console.log(products[i].itemID + " " +newProductID);
+    if(newProductID == products[i].itemID){
+      console.log("THERE IS A MATCH!!! "+ products[i].itemID)
+      res.redirect("/products/update?product_id=" + product_id + "&error=You cannot use the same ID")
+    } 
+  }
   
   params.push(product_id)
   console.log("")
