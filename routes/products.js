@@ -3,7 +3,8 @@ var router = express.Router();
 var MySql = require('sync-mysql');
 
 //get = show data
-router.get('/', function(req, res, next) { 
+router.get('/', function(req, res, next) {
+  var error = req.query.error 
   var connection = new MySql({
     host: 'localhost',
     user: 'root',
@@ -13,16 +14,10 @@ router.get('/', function(req, res, next) {
   var products = connection.query('SELECT * FROM products;');
   res.render('products', {
     title: 'Products',
-    products: products
+    products: products,
+    error: error
   });
 });
-
-// router.get('/another_page', function(req, res, next){
-//   res.render("another_page", {
-//     title: 'Another Page'
-//   })
-
-// });
 
 router.get('/update', function(req, res, next){ //or it can be edit
   var product_id = req.query.product_id;
@@ -50,6 +45,16 @@ router.post('/add', function(req, res, next){
     password: 'passwordformysql',
     database: 'pc_world'
   });
+
+  //checks to see if the ID already exists and throws an error if it does.
+  var products = connection.query('SELECT * FROM products;');
+  for(var i=0; i < products.length; i++){
+    console.log(products[i].itemID + " " +itemID);
+    if(itemID == products[i].itemID){
+      console.log("THERE IS A MATCH!!! "+ products[i].itemID)
+      res.redirect("/products/?&error=You cannot use the same ID")
+    } 
+  }
 
   connection.query('INSERT INTO products(itemID, itemName, category, stock, itemDescription, price) VALUES ((?), (?), (?), (?), (?), (?));', [itemID, itemName, itemCategory, itemStock, itemDescription, itemPrice]);
 
@@ -133,8 +138,9 @@ router.post('/update', function(req, res, next){
   if(!newProductID && !product_name && !itemCategory && !itemStock && !itemDescription  && !itemPrice) {
     res.redirect("/products/update?product_id=" + product_id + "&error=You must update some fields")
   }
-  var products = connection.query('SELECT * FROM products;');
   
+  //checks to see if the ID already exists and throws an error if it does.
+  var products = connection.query('SELECT * FROM products;');
   for(var i=0; i < products.length; i++){
     console.log(products[i].itemID + " " +newProductID);
     if(newProductID == products[i].itemID){

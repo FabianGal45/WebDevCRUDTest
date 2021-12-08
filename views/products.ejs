@@ -6,10 +6,10 @@
   </head>
   <body>
     <h1><%= title %></h1>
-    <p>Welcome to <%= title %>!</p>
-    
     <h5>Add a product to the list</h5>
-    <p>All fields are required</p>
+    <% if(error) { %>
+      <p class="error">Error: <%= error %></p>
+    <% } %>
     <form class="" action="/products/add" method="post">
       <!-- I need to find a way to check if the id already exists and to throw an error -->
       <label for="item_id" class="inputID">ID: </label>
